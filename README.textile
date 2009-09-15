@@ -1,0 +1,66 @@
+h1. Ducksoup Module
+
+A ducktype plugin library for python. The module does a "ducktype" interface check on a "setuptools":http://peak.telecommunity.com/DevCenter/setuptools
+entry point module. If the module passes, it is listed as an available plugin.
+
+_*{color:red;}Requires "setuptools":http://peak.telecommunity.com/DevCenter/setuptools*_
+
+h2. Installing
+
+Run the following shell commands:
+
+<pre>
+git clone git://github.com/getfatday/ducksoup.git
+cd ducksoup
+./setup.py install
+</pre>
+
+h2. Usage
+
+Define a plugin interface and entry point for you application:
+
+<pre>
+# Define an interface.
+
+class ICommand(IPlugin):
+
+  name = ""
+  description = ""
+  def execute(*arg): pass
+
+# Register an entry point.
+
+class Command(plugin):
+    __entry_point__ = "ducksoup.plugin.commands"
+    __interface__ = ICommand
+</pre>
+
+Register an external module as a plugin.
+
+<pre>
+from setuptools import setup
+
+setup(
+  name="mycommands",
+  version="0.0.1",
+  description="""My Commands""",
+  entry_points="""
+  [ducksoup.plugin.commands]
+  mycommands.command = mycommands.command:Command
+  """
+)
+</pre>
+
+Search for available plugins:
+
+<pre>
+    
+for entry in Command().entries:
+    print """Name: %s
+Description: %s
+""" % (entry.name, entry.description)    
+</pre>
+
+h2. Feedback
+
+Shoot me an email at "getfatday@gmail.com":mailto:getfatday@gmail.com with any feedback.
